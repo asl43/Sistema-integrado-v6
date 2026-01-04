@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sistema Integrado Pessoal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TELA DE LOGIN */
+.login-container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
+}
+
+.login-container h2 {
+  text-align: center;
+  color: #667eea;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.form-group input.required {
+  border-color: #667eea;
+}
+
+.form-group input.error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+.btn-entrar {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-entrar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-entrar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.opcional {
+  font-size: 12px;
+  color: #999;
+  margin-left: 5px;
+}
+
+.sheets-config {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.sheets-config h4 {
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.sheets-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.sheets-status.connected {
+  background: #d4edda;
+  color: #155724;
+}
+
+.sheets-status.disconnected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* TELA PRINCIPAL */
+.main-container {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  background: #f4f6f9;
+}
+
+.main-container.active {
+  display: block;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.user-info {
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn-sair {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.btn-sair:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* CARDS PRINCIPAIS */
+.cards-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.main-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.main-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.main-card .icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.main-card h3 {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.main-card p {
+  color: #666;
+  font-size: 14px;
+}
+
+/* TELA DE MÓDULO */
+.module-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.module-container.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.module-content {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.module-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.module-header h2 {
+  font-size: 24px;
+}
+
+.btn-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.module-body {
+  padding: 20px;
+}
+
+/* FILTROS AVANÇADOS */
+.filter-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-section h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-filter {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn-filter:hover {
+  background: #5568d3;
+}
+
+.btn-clear-filter {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-clear-filter:hover {
+  background: #5a6268;
+}
+
+.filter-results {
+  color: #666;
+  font-size: 13px;
+  margin-top: 10px;
+  padding: 10px;
+  background: #e7f3ff;
+  border-radius: 6px;
+  display: none;
+}
+
+.filter-results.show {
+  display: block;
+}
+
+/* RESUMOS POR CATEGORIA */
+.summary-section {
+  margin-bottom: 30px;
+}
+
+.summary-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.summary-card h4 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+.summary-card p {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.summary-card.highlight {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.summary-card.danger {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.recurrence-info {
+  background: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.form-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.sync-info {
+  background: #d1ecf1;
+  color: #0c5460;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sync-info .icon {
+  font-size: 20px;
+}
+
+/* TABELAS ORDENÁVEIS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: #fff;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 25px;
+}
+
+table th:hover {
+  background: #e9ecef;
+}
+
+table th.sortable::after {
+  content: '⇅';
+  position: absolute;
+  right: 8px;
+  opacity: 0.3;
+  font-size: 12px;
+}
+
+table th.sorted-asc::after {
+  content: '↑';
+  opacity: 1;
+  color: #667eea;
+}
+
+table th.sorted-desc::after {
+  content: '↓';
+  opacity: 1;
+  color: #667eea;
+}
+
+table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.highlight {
+  background: yellow;
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-sync {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.btn-sync:hover {
+  background: #218838;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.dashboard-card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.dashboard-card p {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.data-table {
+  margin-top: 20px;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+.btn-export {
+  background: #17a2b8;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.btn-export:hover {
+  background: #138496;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* ACESSIBILIDADE */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .user-info {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TELA DE LOGIN -->
+<div class="login-container" id="loginScreen">
+  <h2>📊 Sistema Financeiro</h2>
+  
+  <form onsubmit="fazerLogin(event)">
+    <div class="form-group">
+      <label for="loginNome">Nome Completo <span style="color: red;">*</span></label>
+      <input type="text" id="loginNome" class="required" required aria-required="true">
+    </div>
+    
+    <div class="form-group">
+      <label for="loginCPF">CPF <span class="opcional">(opcional)</span></label>
+      <input type="text" id="loginCPF" placeholder="000.000.000-00" maxlength="14">
+    </div>
+    
+    <div class="form-group">
+      <label for="loginEmail">E-mail <span class="opcional">(opcional)</span></label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com">
+    </div>
+    
+    <div class="sheets-config">
+      <h4>🔗 Integração Google Sheets</h4>
+      <div class="form-group">
+        <label for="sheetsId">ID da Planilha Google Sheets</label>
+        <input type="text" id="sheetsId" placeholder="Cole aqui o ID da sua planilha">
+      </div>
+      <div class="form-group">
+        <label for="apiKey">API Key do Google</label>
+        <input type="password" id="apiKey" placeholder="Cole aqui sua API Key">
+      </div>
+      <p style="font-size: 12px; color: #666; margin-top: 10px;">
+        ℹ️ Para usar a sincronização, você precisa criar uma planilha no Google Sheets e obter uma API Key.
+        <a href="https://developers.google.com/sheets/api/quickstart" target="_blank" style="color: #667eea;">Saiba mais</a>
+      </p>
+    </div>
+    
+    <button type="submit" class="btn-entrar" aria-label="Entrar no sistema">Entrar</button>
+  </form>
+</div>
+
+<!-- TELA PRINCIPAL -->
+<div class="main-container" id="mainScreen">
+  <div class="header">
+    <div class="header-content">
+      <h1>📊 Sistema Financeiro Pessoal</h1>
+      <div class="user-info">
+        <div class="user-name" id="userName"></div>
+        <div style="margin-top: 5px;">
+          <span class="sheets-status" id="sheetsStatus">Sheets: Desconectado</span>
+        </div>
+        <button class="btn-sair" onclick="fazerLogout()" aria-label="Sair do sistema">Sair</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cards-container">
+    <div class="main-card" onclick="openModule('financeiro')" role="button" tabindex="0" aria-label="Abrir módulo financeiro">
+      <div class="icon" aria-hidden="true">💰</div>
+      <h3>Financeiro</h3>
+      <p>Controle suas receitas e despesas</p>
+    </div>
+    
+    <div class="main-card" onclick="openModule('investimento')" role="button" tabindex="0" aria-label="Abrir módulo de investimentos">
+      <div class="icon" aria-hidden="true">📈</div>
+      <h3>Investimentos</h3>
+      <p>Gerencie sua carteira de investimentos</p>
+    </div>
+    
+    <div class="main-card" onclick="openModule('anotacoes')" role="button" tabindex="0" aria-label="Abrir módulo de anotações">
+      <div class="icon" aria-hidden="true">📝</div>
+      <h3>Anotações</h3>
+      <p>Registre lembretes e observações</p>
+    </div>
+    
+    <div class="main-card" onclick="openModule('dashboard')" role="button" tabindex="0" aria-label="Abrir dashboard">
+      <div class="icon" aria-hidden="true">📊</div>
+      <h3>Dashboard</h3>
+      <p>Visualize suas estatísticas</p>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO FINANCEIRO -->
+<div class="module-container" id="moduleFinanceiro" role="dialog" aria-labelledby="financeiroTitle">
+  <div class="module-content">
+    <div class="module-header">
+      <h2 id="financeiroTitle">💰 Financeiro</h2>
+      <button class="btn-close" onclick="closeModule('financeiro')" aria-label="Fechar módulo financeiro">&times;</button>
+    </div>
+    <div class="module-body">
+      <div class="sync-info">
+        <span class="icon" aria-hidden="true">🔄</span>
+        <span>Dados sincronizados automaticamente com Google Sheets</span>
+      </div>
+      
+      <!-- RESUMO POR CATEGORIA -->
+      <div class="summary-section">
+        <h3>Resumo por Categoria (Com Recorrências Calculadas)</h3>
+        <div class="summary-grid" id="financeiroCategorySummary"></div>
+      </div>
+      
+      <!-- FILTROS AVANÇADOS -->
+      <div class="filter-section">
+        <h3>🔍 Filtros Avançados</h3>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="filterFinDataInicio">Data Início</label>
+            <input type="date" id="filterFinDataInicio">
+          </div>
+          <div class="filter-group">
+            <label for="filterFinDataFim">Data Fim</label>
+            <input type="date" id="filterFinDataFim">
+          </div>
+          <div class="filter-group">
+            <label for="filterFinTipo">Tipo</label>
+            <select id="filterFinTipo">
+              <option value="">Todos</option>
+              <option value="Pagar">Pagar</option>
+              <option value="Recebido">Recebido</option>
+              <option value="A Receber">A Receber</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterFinCategoria">Categoria</label>
+            <select id="filterFinCategoria">
+              <option value="">Todas</option>
+              <option value="Salário">Salário</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Moradia">Moradia</option>
+              <option value="Saúde">Saúde</option>
+              <option value="Educação">Educação</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filter" onclick="applyFinanceiroFilters()" aria-label="Aplicar filtros">Aplicar Filtros</button>
+          <button class="btn-clear-filter" onclick="clearFinanceiroFilters()" aria-label="Limpar filtros">Limpar Filtros</button>
+        </div>
+        <div class="filter-results" id="filterResultsFinanceiro"></div>
+      </div>
+      
+      <div class="form-card">
+        <h3>Adicionar Transação</h3>
+        <table>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Valor (R$)</th>
+            <th>Categoria</th>
+            <th>Recorrente</th>
+          </tr>
+          <tr>
+            <td><input type="datetime-local" id="f_data" aria-label="Data e hora da transação"></td>
+            <td>
+              <select id="f_tipo" aria-label="Tipo de transação">
+                <option>Pagar</option>
+                <option>Recebido</option>
+                <option>A Receber</option>
+              </select>
+            </td>
+            <td><input id="f_desc" placeholder="Descrição" aria-label="Descrição da transação"></td>
+            <td><input type="text" id="f_valor" placeholder="0,00" aria-label="Valor da transação"></td>
+            <td>
+              <select id="f_cat" aria-label="Categoria da transação">
+                <option>Salário</option>
+                <option>Alimentação</option>
+                <option>Transporte</option>
+                <option>Moradia</option>
+                <option>Saúde</option>
+                <option>Educação</option>
+                <option>Lazer</option>
+                <option>Outros</option>
+              </select>
+            </td>
+            <td>
+              <select id="f_rec" aria-label="Recorrência da transação">
+                <option>Não</option>
+                <option>Diário</option>
+                <option>Semanal</option>
+                <option>Mensal</option>
+                <option>Anual</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+        <div class="action-buttons">
+          <button class="btn-primary" onclick="addFinanceiro()" aria-label="Adicionar nova transação">Adicionar Transação</button>
+          <button class="btn-sync" onclick="syncToSheets('financeiro')" aria-label="Sincronizar com Google Sheets">Sincronizar com Sheets</button>
+          <button class="btn-export" onclick="exportToCSV('financeiro')" aria-label="Exportar dados para CSV">Exportar CSV</button>
+        </div>
+      </div>
+      
+      <div class="data-table">
+        <h3>Histórico de Transações</h3>
+        <table id="financeiroTable" aria-label="Tabela de transações financeiras">
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortTable('financeiroTable', 0)" aria-label="Ordenar por data">Data</th>
+              <th class="sortable" onclick="sortTable('financeiroTable', 1)" aria-label="Ordenar por tipo">Tipo</th>
+              <th class="sortable" onclick="sortTable('financeiroTable', 2)" aria-label="Ordenar por descrição">Descrição</th>
+              <th class="sortable" onclick="sortTable('financeiroTable', 3)" aria-label="Ordenar por categoria">Categoria</th>
+              <th class="sortable" onclick="sortTable('financeiroTable', 4)" aria-label="Ordenar por valor">Valor</th>
+              <th>Recorrência</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO INVESTIMENTOS -->
+<div class="module-container" id="moduleInvestimento" role="dialog" aria-labelledby="investimentoTitle">
+  <div class="module-content">
+    <div class="module-header">
+      <h2 id="investimentoTitle">📈 Investimentos</h2>
+      <button class="btn-close" onclick="closeModule('investimento')" aria-label="Fechar módulo de investimentos">&times;</button>
+    </div>
+    <div class="module-body">
+      <div class="sync-info">
+        <span class="icon" aria-hidden="true">🔄</span>
+        <span>Dados sincronizados automaticamente com Google Sheets</span>
+      </div>
+      
+      <!-- RESUMO POR MODALIDADE -->
+      <div class="summary-section">
+        <h3>Resumo por Modalidade (Com Proventos Recorrentes Calculados)</h3>
+        <div class="summary-grid" id="investimentoModalitySummary"></div>
+      </div>
+      
+      <!-- FILTROS AVANÇADOS -->
+      <div class="filter-section">
+        <h3>🔍 Filtros Avançados</h3>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="filterInvModalidade">Modalidade</label>
+            <select id="filterInvModalidade">
+              <option value="">Todas</option>
+              <option value="Ações">Ações</option>
+              <option value="Renda Fixa">Renda Fixa</option>
+              <option value="Fiagro">Fiagro</option>
+              <option value="Fundos Imobiliários">Fundos Imobiliários</option>
+              <option value="CDB">CDB</option>
+              <option value="Poupança">Poupança</option>
+              <option value="Tesouro Selic">Tesouro Selic</option>
+              <option value="Criptomoedas">Criptomoedas</option>
+              <option value="Renda Extra">Renda Extra</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterInvValorMin">Valor Mínimo (R$)</label>
+            <input type="text" id="filterInvValorMin" placeholder="0,00">
+          </div>
+          <div class="filter-group">
+            <label for="filterInvValorMax">Valor Máximo (R$)</label>
+            <input type="text" id="filterInvValorMax" placeholder="0,00">
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filter" onclick="applyInvestimentoFilters()" aria-label="Aplicar filtros">Aplicar Filtros</button>
+          <button class="btn-clear-filter" onclick="clearInvestimentoFilters()" aria-label="Limpar filtros">Limpar Filtros</button>
+        </div>
+        <div class="filter-results" id="filterResultsInvestimento"></div>
+      </div>
+      
+      <div class="form-card">
+        <h3>Adicionar Investimento</h3>
+        <table>
+          <tr>
+            <th>Ativo</th>
+            <th>Modalidade</th>
+            <th>Data</th>
+            <th>Valor Investido (R$)</th>
+            <th>Preço Cota (R$)</th>
+            <th>Qtd</th>
+            <th>Provento Mensal (R$)</th>
+            <th>Recorrente</th>
+          </tr>
+          <tr>
+            <td><input id="i_ativo" placeholder="Nome do ativo" aria-label="Nome do ativo"></td>
+            <td>
+              <select id="i_mod" aria-label="Modalidade do investimento">
+                <option>Ações</option>
+                <option>Renda Fixa</option>
+                <option>Fiagro</option>
+                <option>Fundos Imobiliários</option>
+                <option>CDB</option>
+                <option>Poupança</option>
+                <option>Tesouro Selic</option>
+                <option>Criptomoedas</option>
+                <option>Renda Extra</option>
+              </select>
+            </td>
+            <td><input type="date" id="i_data" aria-label="Data do investimento"></td>
+            <td><input type="text" id="i_valor" placeholder="0,00" aria-label="Valor investido"></td>
+            <td><input type="text" id="i_preco" placeholder="0,00" aria-label="Preço da cota"></td>
+            <td><input type="number" id="i_qtd" step="0.01" placeholder="0" aria-label="Quantidade"></td>
+            <td><input type="text" id="i_prov" placeholder="0,00" aria-label="Provento mensal"></td>
+            <td>
+              <select id="i_rec" aria-label="Recorrência">
+                <option>Não</option>
+                <option>Mensal</option>
+                <option>Bimestral</option>
+                <option>Trimestral</option>
+                <option>Semestral</option>
+                <option>Anual</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+        <div class="action-buttons">
+          <button class="btn-primary" onclick="addInvestimento()" aria-label="Adicionar novo investimento">Adicionar Investimento</button>
+          <button class="btn-sync" onclick="syncToSheets('investimento')" aria-label="Sincronizar com Google Sheets">Sincronizar com Sheets</button>
+          <button class="btn-export" onclick="exportToCSV('investimento')" aria-label="Exportar dados para CSV">Exportar CSV</button>
+        </div>
+      </div>
+      
+      <div class="data-table">
+        <h3>Carteira de Investimentos</h3>
+        <table id="investTable" aria-label="Tabela de investimentos">
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortTable('investTable', 0)" aria-label="Ordenar por ativo">Ativo</th>
+              <th class="sortable" onclick="sortTable('investTable', 1)" aria-label="Ordenar por modalidade">Modalidade</th>
+              <th class="sortable" onclick="sortTable('investTable', 2)" aria-label="Ordenar por valor investido">Valor Investido</th>
+              <th class="sortable" onclick="sortTable('investTable', 3)" aria-label="Ordenar por proventos">Proventos Mensais</th>
+              <th>Recorrência</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO ANOTAÇÕES -->
+<div class="module-container" id="moduleAnotacoes" role="dialog" aria-labelledby="anotacoesTitle">
+  <div class="module-content">
+    <div class="module-header">
+      <h2 id="anotacoesTitle">📝 Anotações</h2>
+      <button class="btn-close" onclick="closeModule('anotacoes')" aria-label="Fechar módulo de anotações">&times;</button>
+    </div>
+    <div class="module-body">
+      <div class="sync-info">
+        <span class="icon" aria-hidden="true">🔄</span>
+        <span>Dados sincronizados automaticamente com Google Sheets</span>
+      </div>
+      
+      <!-- RESUMO POR PRIORIDADE -->
+      <div class="summary-section">
+        <h3>Resumo por Prioridade</h3>
+        <div class="summary-grid" id="anotacoesPrioritySummary"></div>
+      </div>
+      
+      <!-- FILTROS AVANÇADOS -->
+      <div class="filter-section">
+        <h3>🔍 Filtros Avançados</h3>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="filterAnotPrioridade">Prioridade</label>
+            <select id="filterAnotPrioridade">
+              <option value="">Todas</option>
+              <option value="Baixa">Baixa</option>
+              <option value="Média">Média</option>
+              <option value="Alta">Alta</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterAnotTexto">Pesquisar Texto</label>
+            <input type="text" id="filterAnotTexto" placeholder="Título ou notas...">
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filter" onclick="applyAnotacoesFilters()" aria-label="Aplicar filtros">Aplicar Filtros</button>
+          <button class="btn-clear-filter" onclick="clearAnotacoesFilters()" aria-label="Limpar filtros">Limpar Filtros</button>
+        </div>
+        <div class="filter-results" id="filterResultsAnotacoes"></div>
+      </div>
+      
+      <div class="form-card">
+        <h3>Nova Anotação</h3>
+        <table>
+          <tr>
+            <th>Título</th>
+            <th>Notas</th>
+            <th>Prioridade</th>
+            <th>Extra 1</th>
+            <th>Extra 2</th>
+            <th>Extra 3</th>
+          </tr>
+          <tr>
+            <td><input id="a_titulo" placeholder="Título" aria-label="Título da anotação"></td>
+            <td><textarea id="a_notas" rows="3" placeholder="Suas anotações..." aria-label="Conteúdo da anotação"></textarea></td>
+            <td>
+              <select id="a_prioridade" aria-label="Prioridade da anotação">
+                <option>Baixa</option>
+                <option>Média</option>
+                <option>Alta</option>
+              </select>
+            </td>
+            <td><input id="a_extra1" aria-label="Campo extra 1"></td>
+            <td><input id="a_extra2" aria-label="Campo extra 2"></td>
+            <td><input id="a_extra3" aria-label="Campo extra 3"></td>
+          </tr>
+        </table>
+        <div class="action-buttons">
+          <button class="btn-primary" onclick="addAnotacao()" aria-label="Adicionar nova anotação">Adicionar Anotação</button>
+          <button class="btn-sync" onclick="syncToSheets('anotacoes')" aria-label="Sincronizar com Google Sheets">Sincronizar com Sheets</button>
+          <button class="btn-export" onclick="exportToCSV('anotacoes')" aria-label="Exportar dados para CSV">Exportar CSV</button>
+        </div>
+      </div>
+      
+      <div class="data-table">
+        <h3>Minhas Anotações</h3>
+        <table id="anotacoesTable" aria-label="Tabela de anotações">
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortTable('anotacoesTable', 0)" aria-label="Ordenar por título">Título</th>
+              <th class="sortable" onclick="sortTable('anotacoesTable', 1)" aria-label="Ordenar por notas">Notas</th>
+              <th class="sortable" onclick="sortTable('anotacoesTable', 2)" aria-label="Ordenar por prioridade">Prioridade</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO DASHBOARD -->
+<div class="module-container" id="moduleDashboard" role="dialog" aria-labelledby="dashboardTitle">
+  <div class="module-content">
+    <div class="module-header">
+      <h2 id="dashboardTitle">📊 Dashboard</h2>
+      <button class="btn-close" onclick="closeModule('dashboard')" aria-label="Fechar dashboard">&times;</button>
+    </div>
+    <div class="module-body">
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3>Total Investido</h3>
+          <p id="totalInvestido">R$ 0,00</p>
+        </div>
+        <div class="dashboard-card">
+          <h3>Proventos Mensais</h3>
+          <p id="totalProventos">R$ 0,00</p>
+          <div class="recurrence-info">Inclui cálculo de recorrências</div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Receitas</h3>
+          <p id="totalReceitas">R$ 0,00</p>
+          <div class="recurrence-info">Inclui cálculo de recorrências</div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Despesas</h3>
+          <p id="totalDespesas">R$ 0,00</p>
+          <div class="recurrence-info">Inclui cálculo de recorrências</div>
+        </div>
+      </div>
+      
+      <div class="data-table">
+        <h3>Resumo Financeiro</h3>
+        <table aria-label="Resumo financeiro geral">
+          <tr>
+            <th>Métrica</th>
+            <th>Valor</th>
+          </tr>
+          <tr>
+            <td><strong>Saldo Total</strong></td>
+            <td id="saldoTotal"><strong>R$ 0,00</strong></td>
+          </tr>
+          <tr>
+            <td>Patrimônio Total (Investimentos + Saldo)</td>
+            <td id="patrimonioTotal">R$ 0,00</td>
+          </tr>
+          <tr>
+            <td>Total de Transações</td>
+            <td id="totalTransacoes">0</td>
+          </tr>
+          <tr>
+            <td>Total de Investimentos</td>
+            <td id="totalInvestimentos">0</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== DADOS ====================
+let usuario = JSON.parse(localStorage.getItem('usuario')) || null;
+let financeiro = JSON.parse(localStorage.getItem('financeiro')) || [];
+let investimentos = JSON.parse(localStorage.getItem('investimentos')) || [];
+let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
+let sheetsConfig = JSON.parse(localStorage.getItem('sheetsConfig')) || null;
+
+// Variáveis de filtros
+let financeiroFiltered = [];
+let investimentoFiltered = [];
+let anotacoesFiltered = [];
+
+// ==================== CÁLCULO DE RECORRÊNCIAS ====================
+function calculateRecurrenceOccurrences(startDate, recurrence) {
+  const start = new Date(startDate);
+  const today = new Date();
+  
+  // Se a data inicial é futura, retorna 0 ocorrências
+  if (start > today) {
+    return 0;
+  }
+  
+  const diffTime = Math.abs(today - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  switch(recurrence) {
+    case 'Diário':
+      return diffDays;
+    case 'Semanal':
+      return Math.floor(diffDays / 7);
+    case 'Mensal':
+      const months = (today.getFullYear() - start.getFullYear()) * 12 + (today.getMonth() - start.getMonth());
+      return Math.max(0, months + 1); // +1 para incluir o mês inicial
+    case 'Bimestral':
+      const bimesters = Math.floor(((today.getFullYear() - start.getFullYear()) * 12 + (today.getMonth() - start.getMonth())) / 2);
+      return Math.max(0, bimesters + 1);
+    case 'Trimestral':
+      const quarters = Math.floor(((today.getFullYear() - start.getFullYear()) * 12 + (today.getMonth() - start.getMonth())) / 3);
+      return Math.max(0, quarters + 1);
+    case 'Semestral':
+      const semesters = Math.floor(((today.getFullYear() - start.getFullYear()) * 12 + (today.getMonth() - start.getMonth())) / 6);
+      return Math.max(0, semesters + 1);
+    case 'Anual':
+      const years = today.getFullYear() - start.getFullYear();
+      return Math.max(0, years + 1); // +1 para incluir o ano inicial
+    default:
+      return 1; // Não recorrente
+  }
+}
+
+function calculateRecurringValue(value, startDate, recurrence) {
+  if (recurrence === 'Não') {
+    return value;
+  }
+  
+  const occurrences = calculateRecurrenceOccurrences(startDate, recurrence);
+  return value * occurrences;
+}
+
+// ==================== FORMATAÇÃO DE MOEDA ====================
+function formatCurrency(input) {
+  let value = input.value.replace(/\D/g, '');
+  value = (value / 100).toFixed(2);
+  value = value.replace('.', ',');
+  value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  input.value = value;
+}
+
+function parseCurrency(value) {
+  if (typeof value === 'number') return value;
+  return parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
+}
+
+function displayCurrency(value) {
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+}
+
+// ==================== VALIDAÇÃO DE DATA ====================
+function validateDate(dateInput, allowFuture = false) {
+  const selectedDate = new Date(dateInput.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  if (!allowFuture && selectedDate > today) {
+    alert('Data não pode ser futura!');
+    dateInput.value = '';
+    return false;
+  }
+  return true;
+}
+
+// ==================== INICIALIZAÇÃO ====================
+window.onload = function() {
+  if (usuario) {
+    mostrarTelaPrincipal();
+  }
+  
+  // Adicionar formatação de moeda aos campos
+  const currencyInputs = ['f_valor', 'i_valor', 'i_preco', 'i_prov', 'filterInvValorMin', 'filterInvValorMax'];
+  currencyInputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function() {
+        formatCurrency(this);
+      });
+    }
+  });
+  
+  // Formatação de CPF
+  const cpfInput = document.getElementById('loginCPF');
+  if (cpfInput) {
+    cpfInput.addEventListener('input', function() {
+      let value = this.value.replace(/\D/g, '');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      this.value = value;
+    });
+  }
+};
+
+// ==================== LOGIN ====================
+function fazerLogin(event) {
+  event.preventDefault();
+  
+  const nome = document.getElementById('loginNome').value.trim();
+  if (!nome) {
+    alert('Por favor, preencha o nome!');
+    return;
+  }
+  
+  usuario = {
+    nome: nome,
+    cpf: document.getElementById('loginCPF').value,
+    email: document.getElementById('loginEmail').value
+  };
+  
+  const sheetsId = document.getElementById('sheetsId').value.trim();
+  const apiKey = document.getElementById('apiKey').value.trim();
+  
+  if (sheetsId && apiKey) {
+    sheetsConfig = { sheetsId, apiKey };
+    localStorage.setItem('sheetsConfig', JSON.stringify(sheetsConfig));
+  }
+  
+  localStorage.setItem('usuario', JSON.stringify(usuario));
+  mostrarTelaPrincipal();
+}
+
+function mostrarTelaPrincipal() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainScreen').classList.add('active');
+  document.getElementById('userName').textContent = usuario.nome;
+  
+  const statusEl = document.getElementById('sheetsStatus');
+  if (sheetsConfig && sheetsConfig.sheetsId && sheetsConfig.apiKey) {
+    statusEl.textContent = 'Sheets: Conectado';
+    statusEl.className = 'sheets-status connected';
+  } else {
+    statusEl.textContent = 'Sheets: Desconectado';
+    statusEl.className = 'sheets-status disconnected';
+  }
+}
+
+function fazerLogout() {
+  if (confirm('Deseja realmente sair?')) {
+    document.getElementById('mainScreen').classList.remove('active');
+    document.getElementById('loginScreen').style.display = 'block';
+  }
+}
+
+// ==================== MÓDULOS ====================
+function openModule(module) {
+  document.getElementById('module' + module.charAt(0).toUpperCase() + module.slice(1)).classList.add('active');
+  
+  if (module === 'financeiro') {
+    renderFinanceiro();
+    renderFinanceiroCategorySummary();
+  }
+  if (module === 'investimento') {
+    renderInvestimentos();
+    renderInvestimentoModalitySummary();
+  }
+  if (module === 'anotacoes') {
+    renderAnotacoes();
+    renderAnotacoesPrioritySummary();
+  }
+  if (module === 'dashboard') {
+    renderDashboard();
+  }
+}
+
+function closeModule(module) {
+  document.getElementById('module' + module.charAt(0).toUpperCase() + module.slice(1)).classList.remove('active');
+}
+
+// ==================== FINANCEIRO ====================
+function addFinanceiro() {
+  const dataInput = document.getElementById('f_data');
+  const tipo = document.getElementById('f_tipo').value;
+  
+  // Validação de data
+  if (tipo !== 'A Receber' && !validateDate(dataInput, false)) {
+    return;
+  }
+  
+  const item = {
+    id: Date.now(),
+    data: dataInput.value,
+    tipo: tipo,
+    descricao: document.getElementById('f_desc').value,
+    valor: parseCurrency(document.getElementById('f_valor').value),
+    categoria: document.getElementById('f_cat').value,
+    recorrente: document.getElementById('f_rec').value
+  };
+  
+  if (!item.data || !item.descricao || item.valor === 0) {
+    alert('Preencha todos os campos obrigatórios!');
+    return;
+  }
+  
+  financeiro.push(item);
+  localStorage.setItem('financeiro', JSON.stringify(financeiro));
+  
+  document.getElementById('f_data').value = '';
+  document.getElementById('f_desc').value = '';
+  document.getElementById('f_valor').value = '';
+  
+  renderFinanceiro();
+  renderFinanceiroCategorySummary();
+  
+  if (sheetsConfig) {
+    syncToSheets('financeiro');
+  }
+}
+
+function renderFinanceiro(filtered = null) {
+  const data = filtered || financeiro;
+  const table = document.getElementById('financeiroTable');
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  
+  data.forEach(item => {
+    const row = tbody.insertRow(-1);
+    const dataFormatada = new Date(item.data).toLocaleString('pt-BR');
+    
+    // Calcular valor total com recorrência
+    const valorTotal = calculateRecurringValue(item.valor, item.data, item.recorrente);
+    const occurrences = calculateRecurrenceOccurrences(item.data, item.recorrente);
+    
+    let recorrenciaInfo = item.recorrente;
+    if (item.recorrente !== 'Não') {
+      recorrenciaInfo += ` (${occurrences}x = R$ ${displayCurrency(valorTotal)})`;
+    }
+    
+    row.innerHTML = `
+      <td>${dataFormatada}</td>
+      <td>${item.tipo}</td>
+      <td>${item.descricao}</td>
+      <td>${item.categoria}</td>
+      <td>R$ ${displayCurrency(item.valor)}</td>
+      <td>${recorrenciaInfo}</td>
+      <td><button class="btn-delete" onclick="deleteFinanceiro(${item.id})" aria-label="Excluir transação ${item.descricao}">Excluir</button></td>
+    `;
+  });
+}
+
+function deleteFinanceiro(id) {
+  if (confirm('Deseja excluir esta transação?')) {
+    financeiro = financeiro.filter(item => item.id !== id);
+    localStorage.setItem('financeiro', JSON.stringify(financeiro));
+    renderFinanceiro();
+    renderFinanceiroCategorySummary();
+    
+    if (sheetsConfig) {
+      syncToSheets('financeiro');
+    }
+  }
+}
+
+function renderFinanceiroCategorySummary() {
+  const summary = {};
+  
+  financeiro.forEach(item => {
+    if (!summary[item.categoria]) {
+      summary[item.categoria] = { total: 0, count: 0, occurrences: 0 };
+    }
+    
+    // Calcular valor com recorrência
+    const valorRecorrente = calculateRecurringValue(item.valor, item.data, item.recorrente);
+    const occurrences = calculateRecurrenceOccurrences(item.data, item.recorrente);
+    
+    if (item.tipo === 'Pagar') {
+      summary[item.categoria].total -= valorRecorrente;
+    } else {
+      summary[item.categoria].total += valorRecorrente;
+    }
+    summary[item.categoria].count++;
+    summary[item.categoria].occurrences += occurrences;
+  });
+  
+  const container = document.getElementById('financeiroCategorySummary');
+  container.innerHTML = '';
+  
+  Object.keys(summary).forEach(categoria => {
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+    if (summary[categoria].total < 0) {
+      card.classList.add('danger');
+    } else if (summary[categoria].total > 0) {
+      card.classList.add('highlight');
+    }
+    
+    card.innerHTML = `
+      <h4>${categoria}</h4>
+      <p>R$ ${displayCurrency(summary[categoria].total)}</p>
+      <small style="opacity: 0.8; font-size: 12px;">${summary[categoria].count} transações</small><br>
+      <small style="opacity: 0.7; font-size: 11px;">${summary[categoria].occurrences} ocorrências</small>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// FILTROS AVANÇADOS - FINANCEIRO
+function applyFinanceiroFilters() {
+  const dataInicio = document.getElementById('filterFinDataInicio').value;
+  const dataFim = document.getElementById('filterFinDataFim').value;
+  const tipo = document.getElementById('filterFinTipo').value;
+  const categoria = document.getElementById('filterFinCategoria').value;
+  
+  financeiroFiltered = financeiro.filter(item => {
+    const itemDate = new Date(item.data);
+    let match = true;
+    
+    if (dataInicio && itemDate < new Date(dataInicio)) match = false;
+    if (dataFim && itemDate > new Date(dataFim)) match = false;
+    if (tipo && item.tipo !== tipo) match = false;
+    if (categoria && item.categoria !== categoria) match = false;
+    
+    return match;
+  });
+  
+  renderFinanceiro(financeiroFiltered);
+  
+  const resultsEl = document.getElementById('filterResultsFinanceiro');
+  resultsEl.textContent = `Encontrados ${financeiroFiltered.length} resultado(s)`;
+  resultsEl.classList.add('show');
+}
+
+function clearFinanceiroFilters() {
+  document.getElementById('filterFinDataInicio').value = '';
+  document.getElementById('filterFinDataFim').value = '';
+  document.getElementById('filterFinTipo').value = '';
+  document.getElementById('filterFinCategoria').value = '';
+  
+  financeiroFiltered = [];
+  renderFinanceiro();
+  
+  const resultsEl = document.getElementById('filterResultsFinanceiro');
+  resultsEl.classList.remove('show');
+}
+
+// ==================== INVESTIMENTOS ====================
+function addInvestimento() {
+  const item = {
+    id: Date.now(),
+    ativo: document.getElementById('i_ativo').value,
+    modalidade: document.getElementById('i_mod').value,
+    data: document.getElementById('i_data').value,
+    valor: parseCurrency(document.getElementById('i_valor').value),
+    preco: parseCurrency(document.getElementById('i_preco').value),
+    quantidade: parseFloat(document.getElementById('i_qtd').value) || 0,
+    provento: parseCurrency(document.getElementById('i_prov').value),
+    recorrente: document.getElementById('i_rec').value
+  };
+  
+  if (!item.ativo || item.valor === 0) {
+    alert('Preencha os campos obrigatórios!');
+    return;
+  }
+  
+  investimentos.push(item);
+  localStorage.setItem('investimentos', JSON.stringify(investimentos));
+  
+  document.getElementById('i_ativo').value = '';
+  document.getElementById('i_valor').value = '';
+  document.getElementById('i_preco').value = '';
+  document.getElementById('i_qtd').value = '';
+  document.getElementById('i_prov').value = '';
+  
+  renderInvestimentos();
+  renderInvestimentoModalitySummary();
+  
+  if (sheetsConfig) {
+    syncToSheets('investimento');
+  }
+}
+
+function renderInvestimentos(filtered = null) {
+  const data = filtered || investimentos;
+  const table = document.getElementById('investTable');
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  
+  data.forEach(item => {
+    const row = tbody.insertRow(-1);
+    
+    // Calcular proventos totais com recorrência
+    const proventoTotal = calculateRecurringValue(item.provento, item.data, item.recorrente);
+    const occurrences = calculateRecurrenceOccurrences(item.data, item.recorrente);
+    
+    let recorrenciaInfo = item.recorrente;
+    if (item.recorrente !== 'Não' && item.provento > 0) {
+      recorrenciaInfo += ` (${occurrences}x = R$ ${displayCurrency(proventoTotal)})`;
+    }
+    
+    row.innerHTML = `
+      <td>${item.ativo}</td>
+      <td>${item.modalidade}</td>
+      <td>R$ ${displayCurrency(item.valor)}</td>
+      <td>R$ ${displayCurrency(item.provento)}/mês</td>
+      <td>${recorrenciaInfo}</td>
+      <td><button class="btn-delete" onclick="deleteInvestimento(${item.id})" aria-label="Excluir investimento ${item.ativo}">Excluir</button></td>
+    `;
+  });
+}
+
+function deleteInvestimento(id) {
+  if (confirm('Deseja excluir este investimento?')) {
+    investimentos = investimentos.filter(item => item.id !== id);
+    localStorage.setItem('investimentos', JSON.stringify(investimentos));
+    renderInvestimentos();
+    renderInvestimentoModalitySummary();
+    
+    if (sheetsConfig) {
+      syncToSheets('investimento');
+    }
+  }
+}
+
+function renderInvestimentoModalitySummary() {
+  const summary = {};
+  
+  investimentos.forEach(item => {
+    if (!summary[item.modalidade]) {
+      summary[item.modalidade] = { total: 0, count: 0, proventos: 0, occurrences: 0 };
+    }
+    summary[item.modalidade].total += item.valor;
+    
+    // Calcular proventos com recorrência
+    const proventoRecorrente = calculateRecurringValue(item.provento, item.data, item.recorrente);
+    const occurrences = calculateRecurrenceOccurrences(item.data, item.recorrente);
+    
+    summary[item.modalidade].proventos += proventoRecorrente;
+    summary[item.modalidade].count++;
+    summary[item.modalidade].occurrences += occurrences;
+  });
+  
+  const container = document.getElementById('investimentoModalitySummary');
+  container.innerHTML = '';
+  
+  Object.keys(summary).forEach(modalidade => {
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+    
+    card.innerHTML = `
+      <h4>${modalidade}</h4>
+      <p>R$ ${displayCurrency(summary[modalidade].total)}</p>
+      <small style="opacity: 0.8; font-size: 12px;">${summary[modalidade].count} ativos</small><br>
+      <small style="opacity: 0.8; font-size: 11px;">Proventos: R$ ${displayCurrency(summary[modalidade].proventos)}</small><br>
+      <small style="opacity: 0.7; font-size: 10px;">${summary[modalidade].occurrences} ocorrências</small>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// FILTROS AVANÇADOS - INVESTIMENTOS
+function applyInvestimentoFilters() {
+  const modalidade = document.getElementById('filterInvModalidade').value;
+  const valorMin = parseCurrency(document.getElementById('filterInvValorMin').value);
+  const valorMax = parseCurrency(document.getElementById('filterInvValorMax').value);
+  
+  investimentoFiltered = investimentos.filter(item => {
+    let match = true;
+    
+    if (modalidade && item.modalidade !== modalidade) match = false;
+    if (valorMin > 0 && item.valor < valorMin) match = false;
+    if (valorMax > 0 && item.valor > valorMax) match = false;
+    
+    return match;
+  });
+  
+  renderInvestimentos(investimentoFiltered);
+  
+  const resultsEl = document.getElementById('filterResultsInvestimento');
+  resultsEl.textContent = `Encontrados ${investimentoFiltered.length} resultado(s)`;
+  resultsEl.classList.add('show');
+}
+
+function clearInvestimentoFilters() {
+  document.getElementById('filterInvModalidade').value = '';
+  document.getElementById('filterInvValorMin').value = '';
+  document.getElementById('filterInvValorMax').value = '';
+  
+  investimentoFiltered = [];
+  renderInvestimentos();
+  
+  const resultsEl = document.getElementById('filterResultsInvestimento');
+  resultsEl.classList.remove('show');
+}
+
+// ==================== ANOTAÇÕES ====================
+function addAnotacao() {
+  const item = {
+    id: Date.now(),
+    titulo: document.getElementById('a_titulo').value,
+    notas: document.getElementById('a_notas').value,
+    prioridade: document.getElementById('a_prioridade').value,
+    extra1: document.getElementById('a_extra1').value,
+    extra2: document.getElementById('a_extra2').value,
+    extra3: document.getElementById('a_extra3').value
+  };
+  
+  if (!item.titulo) {
+    alert('Preencha o título!');
+    return;
+  }
+  
+  anotacoes.push(item);
+  localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+  
+  document.getElementById('a_titulo').value = '';
+  document.getElementById('a_notas').value = '';
+  document.getElementById('a_extra1').value = '';
+  document.getElementById('a_extra2').value = '';
+  document.getElementById('a_extra3').value = '';
+  
+  renderAnotacoes();
+  renderAnotacoesPrioritySummary();
+  
+  if (sheetsConfig) {
+    syncToSheets('anotacoes');
+  }
+}
+
+function renderAnotacoes(filtered = null) {
+  const data = filtered || anotacoes;
+  const table = document.getElementById('anotacoesTable');
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  
+  data.forEach(item => {
+    const row = tbody.insertRow(-1);
+    row.innerHTML = `
+      <td>${item.titulo}</td>
+      <td>${item.notas}</td>
+      <td>${item.prioridade}</td>
+      <td><button class="btn-delete" onclick="deleteAnotacao(${item.id})" aria-label="Excluir anotação ${item.titulo}">Excluir</button></td>
+    `;
+  });
+}
+
+function deleteAnotacao(id) {
+  if (confirm('Deseja excluir esta anotação?')) {
+    anotacoes = anotacoes.filter(item => item.id !== id);
+    localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+    renderAnotacoes();
+    renderAnotacoesPrioritySummary();
+    
+    if (sheetsConfig) {
+      syncToSheets('anotacoes');
+    }
+  }
+}
+
+function renderAnotacoesPrioritySummary() {
+  const summary = {
+    'Alta': 0,
+    'Média': 0,
+    'Baixa': 0
+  };
+  
+  anotacoes.forEach(item => {
+    summary[item.prioridade]++;
+  });
+  
+  const container = document.getElementById('anotacoesPrioritySummary');
+  container.innerHTML = '';
+  
+  Object.keys(summary).forEach(prioridade => {
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+    
+    if (prioridade === 'Alta') {
+      card.classList.add('danger');
+    } else if (prioridade === 'Média') {
+      card.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+    }
+    
+    card.innerHTML = `
+      <h4>Prioridade ${prioridade}</h4>
+      <p>${summary[prioridade]}</p>
+      <small style="opacity: 0.8; font-size: 12px;">anotações</small>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// FILTROS AVANÇADOS - ANOTAÇÕES
+function applyAnotacoesFilters() {
+  const prioridade = document.getElementById('filterAnotPrioridade').value;
+  const texto = document.getElementById('filterAnotTexto').value.toLowerCase();
+  
+  anotacoesFiltered = anotacoes.filter(item => {
+    let match = true;
+    
+    if (prioridade && item.prioridade !== prioridade) match = false;
+    if (texto && !item.titulo.toLowerCase().includes(texto) && !item.notas.toLowerCase().includes(texto)) match = false;
+    
+    return match;
+  });
+  
+  renderAnotacoes(anotacoesFiltered);
+  
+  const resultsEl = document.getElementById('filterResultsAnotacoes');
+  resultsEl.textContent = `Encontrados ${anotacoesFiltered.length} resultado(s)`;
+  resultsEl.classList.add('show');
+}
+
+function clearAnotacoesFilters() {
+  document.getElementById('filterAnotPrioridade').value = '';
+  document.getElementById('filterAnotTexto').value = '';
+  
+  anotacoesFiltered = [];
+  renderAnotacoes();
+  
+  const resultsEl = document.getElementById('filterResultsAnotacoes');
+  resultsEl.classList.remove('show');
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  let totalInvest = 0;
+  let totalProv = 0;
+  
+  investimentos.forEach(item => {
+    totalInvest += item.valor;
+    // Calcular proventos com recorrência
+    const proventoRecorrente = calculateRecurringValue(item.provento, item.data, item.recorrente);
+    totalProv += proventoRecorrente;
+  });
+  
+  let totalRec = 0;
+  let totalDesp = 0;
+  
+  financeiro.forEach(item => {
+    // Calcular valores com recorrência
+    const valorRecorrente = calculateRecurringValue(item.valor, item.data, item.recorrente);
+    
+    if (item.tipo === 'Recebido' || item.tipo === 'A Receber') {
+      totalRec += valorRecorrente;
+    } else {
+      totalDesp += valorRecorrente;
+    }
+  });
+  
+  const saldo = totalRec - totalDesp;
+  const patrimonio = saldo + totalInvest;
+  
+  document.getElementById('totalInvestido').textContent = 'R$ ' + displayCurrency(totalInvest);
+  document.getElementById('totalProventos').textContent = 'R$ ' + displayCurrency(totalProv);
+  document.getElementById('totalReceitas').textContent = 'R$ ' + displayCurrency(totalRec);
+  document.getElementById('totalDespesas').textContent = 'R$ ' + displayCurrency(totalDesp);
+  document.getElementById('saldoTotal').textContent = 'R$ ' + displayCurrency(saldo);
+  document.getElementById('patrimonioTotal').textContent = 'R$ ' + displayCurrency(patrimonio);
+  document.getElementById('totalTransacoes').textContent = financeiro.length;
+  document.getElementById('totalInvestimentos').textContent = investimentos.length;
+}
+
+// ==================== ORDENAÇÃO DE TABELAS ====================
+function sortTable(tableId, columnIndex) {
+  const table = document.getElementById(tableId);
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const header = table.querySelectorAll('th')[columnIndex];
+  
+  // Determinar direção
+  const isAsc = header.classList.contains('sorted-asc');
+  
+  // Limpar outras colunas
+  table.querySelectorAll('th').forEach(th => {
+    th.classList.remove('sorted-asc', 'sorted-desc');
+  });
+  
+  // Aplicar nova direção
+  if (isAsc) {
+    header.classList.add('sorted-desc');
+  } else {
+    header.classList.add('sorted-asc');
+  }
+  
+  // Ordenar linhas
+  rows.sort((a, b) => {
+    const aText = a.cells[columnIndex].textContent.trim();
+    const bText = b.cells[columnIndex].textContent.trim();
+    
+    // Tentar converter para número
+    const aNum = parseFloat(aText.replace(/[^\d,-]/g, '').replace(',', '.'));
+    const bNum = parseFloat(bText.replace(/[^\d,-]/g, '').replace(',', '.'));
+    
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return isAsc ? bNum - aNum : aNum - bNum;
+    }
+    
+    // Comparação de texto
+    return isAsc ? bText.localeCompare(aText) : aText.localeCompare(bText);
+  });
+  
+  // Re-adicionar linhas ordenadas
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+// ==================== GOOGLE SHEETS ====================
+async function syncToSheets(tipo) {
+  if (!sheetsConfig || !sheetsConfig.sheetsId || !sheetsConfig.apiKey) {
+    alert('Configure a integração com Google Sheets primeiro!');
+    return;
+  }
+  
+  try {
+    let data;
+    let range;
+    
+    if (tipo === 'financeiro') {
+      data = financeiro;
+      range = 'Financeiro!A1';
+    } else if (tipo === 'investimento') {
+      data = investimentos;
+      range = 'Investimentos!A1';
+    } else if (tipo === 'anotacoes') {
+      data = anotacoes;
+      range = 'Anotacoes!A1';
+    }
+    
+    if (!data || data.length === 0) {
+      alert('Não há dados para sincronizar!');
+      return;
+    }
+    
+    const headers = Object.keys(data[0]);
+    const values = [headers, ...data.map(item => headers.map(key => item[key]))];
+    
+    console.log('Sincronizando com Google Sheets:', {
+      spreadsheetId: sheetsConfig.sheetsId,
+      range: range,
+      values: values
+    });
+    
+    alert(`Dados de ${tipo} sincronizados com sucesso! (Simulação)\n\nEm produção, os dados seriam enviados para a planilha ID: ${sheetsConfig.sheetsId}`);
+    
+  } catch (error) {
+    console.error('Erro ao sincronizar:', error);
+    alert('Erro ao sincronizar com Google Sheets: ' + error.message);
+  }
+}
+
+// ==================== EXPORTAR CSV ====================
+function exportToCSV(tipo) {
+  let data;
+  let filename;
+  
+  if (tipo === 'financeiro') {
+    data = financeiro;
+    filename = 'financeiro.csv';
+  } else if (tipo === 'investimento') {
+    data = investimentos;
+    filename = 'investimentos.csv';
+  } else if (tipo === 'anotacoes') {
+    data = anotacoes;
+    filename = 'anotacoes.csv';
+  }
+  
+  if (!data || data.length === 0) {
+    alert('Não há dados para exportar!');
+    return;
+  }
+  
+  const headers = Object.keys(data[0]);
+  const csv = [
+    headers.join(','),
+    ...data.map(row => headers.map(key => {
+      const value = row[key];
+      return typeof value === 'string' && (value.includes(',') || value.includes('\n')) 
+        ? `"${value}"` 
+        : value;
+    }).join(','))
+  ].join('\n');
+  
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  alert(`Arquivo ${filename} exportado com sucesso!`);
+}
+
+// ==================== ACESSIBILIDADE - TECLADO ====================
+document.addEventListener('keydown', function(e) {
+  // Fechar módulos com ESC
+  if (e.key === 'Escape') {
+    const activeModule = document.querySelector('.module-container.active');
+    if (activeModule) {
+      const moduleId = activeModule.id.replace('module', '').toLowerCase();
+      closeModule(moduleId);
+    }
+  }
+});
+
+// Permitir navegação por Enter nos cards
+document.querySelectorAll('.main-card').forEach(card => {
+  card.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      this.click();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
